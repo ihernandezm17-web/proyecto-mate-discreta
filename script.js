@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectFin = document.getElementById('select-fin');
     // Elementos de la modal
     const edgeModal = document.getElementById('edge-modal');
+    const modalContent = document.querySelector('.modal-content');
     const edgeWeightInput = document.getElementById('edge-weight-input');
     const saveEdgeButton = document.getElementById('save-edge-button');
     const cancelEdgeButton = document.getElementById('cancel-edge-button');
@@ -13,6 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnAddNodeMode = document.getElementById('btn-add-node-mode');
     const btnAddEdgeMode = document.getElementById('btn-add-edge-mode');
     const btnDeleteSelected = document.getElementById('btn-delete-selected');
+    // Elementos del historial
+    const historialCalculos = document.getElementById('historial-calculos');
 
     // --- Configuración del Grafo Visual (vis-network) ---
     const nodes = new vis.DataSet([]);
@@ -251,16 +254,42 @@ document.addEventListener('DOMContentLoaded', () => {
         // Resaltar el camino en el grafo visual
         resaltarRuta(resultado.camino);
 
+        // Actualizar el panel de resultados y añadir al historial
         if (resultado.camino) {
             // Mostrar los resultados si se encontró un camino
             document.getElementById('ruta-manual').textContent = resultado.camino.join(' -> ');
             document.getElementById('distancia-manual').textContent = resultado.distancia;
+            agregarAlHistorial(selectInicio.value, selectFin.value, resultado.camino, resultado.distancia);
         } else {
             // Mostrar mensaje si no se encontró
             document.getElementById('ruta-manual').textContent = 'No se encontró una ruta.';
             document.getElementById('distancia-manual').textContent = 'N/A';
+            agregarAlHistorial(selectInicio.value, selectFin.value, null, null);
         }
     }
+
+    /**
+     * Añade un nuevo registro al historial de cálculos.
+     * @param {string} inicio - Nodo de inicio del cálculo.
+     * @param {string} fin - Nodo de fin del cálculo.
+     * @param {string[]|null} camino - El array del camino encontrado.
+     * @param {number|null} distancia - La distancia total del camino.
+     */
+    function agregarAlHistorial(inicio, fin, camino, distancia) {
+        const item = document.createElement('div');
+        item.classList.add('historial-item');
+
+        if (camino) {
+            item.innerHTML = `<strong>${inicio} → ${fin}:</strong> ${camino.join(' → ')} (Dist: ${distancia})`;
+        } else {
+            item.innerHTML = `<strong>${inicio} → ${fin}:</strong> Ruta no encontrada.`;
+            item.classList.add('no-encontrado');
+        }
+
+        // Añadir el nuevo elemento al principio del historial
+        historialCalculos.prepend(item);
+    }
+
 
     /**
      * Resalta los nodos y aristas de la ruta encontrada en el grafo visual.
