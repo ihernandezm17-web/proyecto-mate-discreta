@@ -57,11 +57,12 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         nodes: {
             shape: 'circle',
-            font: { size: 16, color: '#333' },
-            color: { background: '#97C2FC', border: '#2B7CE9' }
+            font: { size: 16, color: '#FFFFFF' },
+            color: { background: '#343a40', border: '#69ce87' }
         },
         edges: {
             width: 2,
+            color: { color: '#888', highlight: '#69ce87' }
         },
 
         physics: {
@@ -267,10 +268,10 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function resaltarRuta(camino) {
         // 1. Restablecer todos los nodos a su color original
-        const todosNodos = nodes.get({ fields: ['id', 'color'] });
+        const todosNodos = nodes.get({ fields: ['id'] });
         const nodosUpdate = todosNodos.map(nodo => ({
             id: nodo.id,
-            color: { background: '#97C2FC', border: '#2B7CE9' } // Color por defecto
+            color: { background: '#343a40', border: '#69ce87' } // Color por defecto
         }));
         nodes.update(nodosUpdate);
     
@@ -291,10 +292,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     
         // 2. Actualizar todas las aristas: verde para el camino, rojo para las demás
-        const todasAristas = edges.get({ fields: ['id', 'color'] });
+        const todasAristas = edges.get({ fields: ['id'] });
         const aristasUpdate = todasAristas.map(arista => ({
             id: arista.id,
-            color: aristasCaminoIds.has(arista.id) ? { color: '#28a745', highlight: '#28a745' } : { color: '#dc3545', highlight: '#dc3545' },
+            color: aristasCaminoIds.has(arista.id) ? { color: '#69ce87', highlight: '#82f7a3' } : { color: '#dc3545', highlight: '#ff5c5c' },
             width: aristasCaminoIds.has(arista.id) ? 4 : 2
         }));
         edges.update(aristasUpdate);
@@ -304,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 3. Resaltar los nodos del camino en verde
         const nodosCaminoUpdate = camino.map(label => ({
             id: labelToIdMap.get(label),
-            color: { background: '#28a745', border: '#1e7e34' } // Color de resaltado (Verde)
+            color: { background: '#69ce87', border: '#82f7a3' } // Color de resaltado (Verde)
         }));
         nodes.update(nodosCaminoUpdate);
     }
